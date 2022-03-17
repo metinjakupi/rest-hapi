@@ -1,7 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
-Joi.objectId = require('joi-objectid')(Joi)
+const Joi = require('joi')
 const _ = require('lodash')
 const validationHelper = require('./validation-helper')
 const queryHelper = require('./query-helper')
@@ -645,6 +644,16 @@ internals.generateJoiModelFromFieldType = function(field, logger) {
 
   return model
 }
+internals.generateObjectId = function() {
+{
+  return Joi.alternatives(
+      Joi.string().regex(/^[0-9a-fA-F]{24}$/, message),
+      Joi.object().keys({
+        id: Joi.any(),
+        _bsontype: Joi.allow('ObjectId')
+      })
+  );
+}
 
 /**
  * Provides easy access to the Joi ObjectId type.
@@ -656,8 +665,7 @@ internals.joiObjectId = function() {
     _bsontype: Joi.any().required(),
     id: Joi.any().required()
   })
-  const model = Joi.alternatives().try(
-    Joi.objectId().description('ObjectId'),
+  const model = Joi.alternatives().try(internals.generateObjectId().description('ObjectId'),
     objectIdModel
   )
   return model
@@ -735,5 +743,7 @@ module.exports = {
 
   joiObjectId: internals.joiObjectId,
 
-  isObjectId: internals.isObjectId
+  isObjectId: internals.isObjectId,
+
+  generateObjectId: internals.generateObjectId
 }
