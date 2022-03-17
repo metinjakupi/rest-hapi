@@ -1,7 +1,7 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
-Joi.objectId = require('joi-objectid')(Joi)
+const Joi = require('joi')
+Joi.objectId = require('./generate-object-id')(Joi)
 const _ = require('lodash')
 const assert = require('assert')
 const joiMongooseHelper = require('./joi-mongoose-helper')
