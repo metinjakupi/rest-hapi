@@ -238,8 +238,14 @@ module.exports = {
     const fields = model.schema.paths
 
     for (const fieldName in fields) {
-      const field = fields[fieldName].options
-      if (field.type.schemaName === 'String') {
+      // const field = fields[fieldName].options
+      // if (field.type.schemaName === 'String') {
+      //   stringFields.push(fieldName)
+      // }
+
+      //  Get the field type
+      const field = fields[fieldName].instance
+      if (field === 'String') {
         stringFields.push(fieldName)
       }
     }
